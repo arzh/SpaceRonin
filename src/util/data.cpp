@@ -5,7 +5,7 @@ static void parseList(const std::string& str, std::vector<std::string>& list) {
 
 	// Added this local for now, will likely be pulled out into a str utility method
 	auto trim = []( char* raw) {
-		if (raw) {
+		if (false) {
 			unsigned len = strlen(raw);
 
 			for (unsigned i = 0; i < len; ++i) {

@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "util\Data.h"
 
 void TestDataClass(std::ostream& log) {
@@ -101,5 +100,43 @@ void TestDataClass(std::ostream& log) {
 	if (d.Flag("ThisFlagIsntPresent")) {
 		log << "Failed to return false when requesting a flag that isn't present\n";
 	}
+
+	// int list testing
+	d.Insert("IntList", "100, 200, 300,  \t400  , \n500");
+	std::vector<int> int_list;
+
+	succ = d.IntList("IntList", int_list);
+	if (succ != true) {
+		log << "Failed to convert the IntList";
+	} else if (int_list.size() != 5) {
+		log << "int_list Size is not what expected (5): " << int_list.size() << "\n";
+	} else if (int_list[0] != 100) {
+		log << "Value on int_list[0] is not what expected (100): " << int_list[0] << "\n";
+	} else if (int_list[4] != 500) {
+		log << "Value on int_list[4] is not what expected (500): " << int_list[4] << "\n";
+	}
+	succ = d.IntList("IntList", int_list);
+	if (succ != true) {
+		log << "Failed to convert and append the int list";
+	} else if (int_list.size() != 10) {
+		log << "int_list Size after appending is not what expected (10): " << int_list.size() << "\n";
+	} else if (int_list[2] != 300) {
+		log << "Value on int_list[2] is not what expected (300): " << int_list[3] << "\n";
+	} else if (int_list[6] != 200) {
+		log << "Value on int_list[6] is not what expected (200): " << int_list[6] << "\n";
+	}
+
+	d.Insert("IntList", "100, 200, HAHA,  \t400  , \n500");
+	int_list.clear();
+
+	succ = d.IntList("IntList", int_list);
+	if (succ != false) {
+		log << "Expected IntList to fail parsing but succeeded";
+	} else if (int_list.size() != 2) {
+		log << "int_list Size is not what expected (2): " << int_list.size() << "\n";
+	} else if (int_list[0] != 100) {
+		log << "Value on int_list[0] is not what expected (100): " << int_list[0] << "\n";
+	}
+
 
 }

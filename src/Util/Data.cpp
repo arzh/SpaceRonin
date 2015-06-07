@@ -32,17 +32,20 @@ static void parseList(const std::string& str, std::vector<std::string>& list) {
 
 #pragma warning(push)
 #pragma warning(disable: 4996)
-	char *c_str = const_cast<char*>(str.c_str());
+	std::string s = str;
+	char *c_str = const_cast<char*>(s.c_str());
 	char *tok = std::strtok(c_str, ",");
 	char *trimmed = trim(tok);
 	while (trimmed != 0) {
 		list.push_back(trimmed);
-		delete[] trimmed;
+		delete[] trimmed; trimmed = 0;
 		tok = std::strtok(NULL, ",");
+		if (tok == 0) break;
 		trimmed = trim(tok);
 	}
 
-	delete[] trimmed;
+	if (trimmed)
+		delete[] trimmed;
 #pragma warning(pop)
 }
 

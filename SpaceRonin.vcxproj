@@ -84,7 +84,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\os\file.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
+    <ClInclude Include="src\os\file.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClCompile Include="src\util\data.cpp" />
     <ClInclude Include="src\test\testRunner.h" />

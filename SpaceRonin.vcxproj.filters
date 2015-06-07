@@ -30,12 +30,18 @@
     <ClInclude Include="src\util\data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="src\os\file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\test\testRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\test\util\test_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\os\file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

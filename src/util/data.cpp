@@ -71,7 +71,7 @@ Data::~Data() {
 	_map.clear();
 }
 
-bool Data::Int(const std::string& key, int& value) {
+bool Data::Int(const std::string& key, int& value) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -86,7 +86,7 @@ bool Data::Int(const std::string& key, int& value) {
 	return true;
 }
 
-bool Data::Double(const std::string& key, double& value) {
+bool Data::Double(const std::string& key, double& value) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -101,7 +101,7 @@ bool Data::Double(const std::string& key, double& value) {
 	return true;
 }
 
-bool Data::String(const std::string& key, std::string& value) {
+bool Data::String(const std::string& key, std::string& value) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -112,7 +112,16 @@ bool Data::String(const std::string& key, std::string& value) {
 	return true;
 }
 
-bool Data::IntList(const std::string& key, std::vector<int>& list) {
+bool Data::Flag(const std::string& key) const {
+	auto& t = _map.find(key);
+
+	if (t == _map.end())
+		return false;
+
+	return isStrTrue(t->second);
+}
+
+bool Data::IntList(const std::string& key, std::vector<int>& list) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -133,7 +142,7 @@ bool Data::IntList(const std::string& key, std::vector<int>& list) {
 	return true;
 }
 
-bool Data::DoubleList(const std::string& key, std::vector<double>& list) {
+bool Data::DoubleList(const std::string& key, std::vector<double>& list) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -153,7 +162,7 @@ bool Data::DoubleList(const std::string& key, std::vector<double>& list) {
 	return true;
 }
 
-bool Data::StringList(const std::string& key, std::vector<std::string>& list) {
+bool Data::StringList(const std::string& key, std::vector<std::string>& list) const {
 	auto& t = _map.find(key);
 
 	if (t == _map.end())
@@ -176,13 +185,4 @@ bool Data::Insert(const std::string& key, const std::string& value, bool dontOve
 	}
 
 	return true;
-}
-
-bool Data::Flag(const std::string& key) {
-	auto& t = _map.find(key);
-
-	if (t == _map.end())
-		return false;
-
-	return isStrTrue(t->second);
 }

@@ -12,7 +12,7 @@ void RunUnitTests(std::ostream& out) {
 	out << "Finished Util\\Data class\n";
 
 	out << "Testing SDFLexer\n";
-	TestSDFLexer(out);
+	TestSDFParser(out);
 	out << "Finished SDFLexer\n";
 }
 

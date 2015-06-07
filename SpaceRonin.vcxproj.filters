@@ -21,13 +21,13 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\Data.cpp">
+    <ClCompile Include="src\util\data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClInclude Include="src\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Data.h">
+    <ClInclude Include="src\util\data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

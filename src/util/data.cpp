@@ -119,7 +119,7 @@ bool Data::IntList(const std::string& key, std::vector<int>& list) {
 		return false;
 
 	std::vector<std::string> strlist;
-	parseList2(t->second, strlist);
+	parseList(t->second, strlist);
 
 	try {
 		for (auto&& s : strlist) {

@@ -2,6 +2,8 @@
 
 #include "util\data.h"
 
+// AppSettting used to track initialization data for the application.
+// Values can be overwritten with a given Data set
 struct AppSettings {
 
 	int winWidth = 1920;

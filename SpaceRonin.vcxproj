@@ -93,8 +93,12 @@
     <ClInclude Include="src\test\testRunner.h" />
     <ClInclude Include="src\test\util\test_data.h" />
     <ClInclude Include="src\test\util\test_sdf.h" />
+    <ClInclude Include="src\util\app.h" />
     <ClInclude Include="src\util\data.h" />
     <ClInclude Include="src\util\simpleDataFormat.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.sdff" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

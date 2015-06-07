@@ -53,5 +53,11 @@
     <ClInclude Include="src\test\util\test_sdf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\util\app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.sdff" />
   </ItemGroup>
 </Project>

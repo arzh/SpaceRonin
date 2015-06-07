@@ -15,15 +15,9 @@
 
 #include "util\data.h"
 
-class SDFLexer {
-public:
-	SDFLexer(const char* content);
-	~SDFLexer();
+namespace sdf {
 
-	void Parse(Data& data);
+	void Parse(const char* content, Data& data);
+	void ParseFile(const char* fn, Data& data);
 
-private:
-	const char* raw;
 };
-
-void ParseSDFFile(const char* fn, Data& data);

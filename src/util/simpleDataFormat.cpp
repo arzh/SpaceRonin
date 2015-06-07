@@ -1,96 +1,108 @@
 
+#include "os\file.h"
 #include "simpleDataFormat.h"
 
-SDFLexer::SDFLexer(const char* content) : raw(content) {}
-SDFLexer::~SDFLexer() {}
+namespace sdf {
 
-void SDFLexer::Parse(Data& data) {
-	enum STATE {
-		MARK = 0,
-		KEY,
-		VALUE,
-		LIST,
-		CLOSE_LIST
-	};
+	void Parse(const char* content, Data& data) {
+		enum STATE {
+			MARK = 0,
+			KEY,
+			VALUE,
+			LIST,
+			CLOSE_LIST
+		};
 
-	const char *key = 0, *value = 0;
-	unsigned klen = 0, vlen = 0, len = 0, mark = 0;
+		struct substr {
+			const char* c;
+			unsigned len;
+		};
 
-	auto lastChar = [this](unsigned end) {
-		for (unsigned e = end-1; e >= 0; --e) {
-			if (!isspace(raw[e]))
-				return e;
+		substr _key;
+		substr _value;
+
+		unsigned mark = 0, loc = 0;
+		unsigned len = strlen(content);
+
+		STATE state = MARK;
+		STATE nextState = KEY;
+
+		auto set = [content, &mark, &loc](substr& ss) {
+			unsigned len = 0;
+			for (unsigned e = loc - 1; e >= 0; --e) {
+				if (!isspace(content[e])) {
+					len = e - mark;
+					break;
+				}
+			}
+
+			ss.c = &content[mark];
+			ss.len = len + 1;
+		};
+
+		auto yank = [&data, &_key, &_value]() {
+			data.Insert(std::string(_key.c, _key.len),
+						std::string(_value.c, _value.len));
+		};
+
+		auto findMark = [&state, &nextState](STATE next) {
+			state = MARK;
+			nextState = next;
+		};
+
+		for (loc = 0; loc < len; ++loc) {
+			char c = content[loc];
+
+			switch (state) {
+			case MARK:
+				if (!isspace(c)) {
+					mark = loc;
+					--loc;
+					state = nextState;
+				}
+				break;
+			case KEY:
+				if (c == ':') {
+					set(_key);
+					findMark(VALUE);
+				}
+				break;
+			case VALUE:
+				if (c == '[') {
+					findMark(LIST);
+				} else if (c == ',') {
+					set(_value);
+					yank();
+					findMark(KEY);
+				}
+				break;
+			case LIST:
+				if (c == ']') {
+					set(_value);
+					state = CLOSE_LIST;
+				}
+				break;
+			case CLOSE_LIST:
+				if (c == ',') {
+					yank();
+					findMark(KEY);
+				}
+				break;
+			}
 		}
-		return (unsigned)0;
-	};
 
-	auto yank = [&data, &key, &klen, &value, &vlen]() {
-		std::string k(key, klen);
-		std::string v(value, vlen);
-		data.Insert(std::string(key, klen), std::string(value, vlen));
-		key = 0; klen = 0; value = 0; vlen = 0;
-	};
-
-	len = strlen(raw);
-
-	STATE state = MARK;
-	STATE nextState = KEY;
-	
-	for ( unsigned loc = 0; loc < len; ++loc) {
-		char c = raw[loc];
-
-		switch (state) {
-		case MARK:
-			if (!isspace(c)) {
-				mark = loc;
-				--loc;
-				state = nextState;
-			}
-			break;
-		case KEY:
-			if (c == ':') {
-				key = &raw[mark];
-				klen = (lastChar(loc) - mark) + 1;
-				state = MARK;
-				nextState = VALUE;
-			}
-			break;
-		case VALUE:
-			if (c == '[') {
-				state = MARK;
-				nextState = LIST;
-			} else if (c == ',') {
-				value = &raw[mark];
-				vlen = (lastChar(loc) - mark) + 1;
-				yank();
-				state = MARK;
-				nextState = KEY;
-			}
-			break;
-		case LIST:
-			if (c == ']') {
-				value = &raw[mark];
-				vlen = (lastChar(loc) - mark) + 1;
-				state = CLOSE_LIST;
-			}
-			break;
-		case CLOSE_LIST:
-			if (c == ',') {
-				yank();
-				state = MARK;
-				nextState = KEY;
-			}
-			break;
-		default:
-			break;
+		if (state == VALUE) {
+			set(_value);
+			yank();
+		} else if (state == CLOSE_LIST) {
+			yank();
 		}
-	}
+	};
 
-	if (state == VALUE) {
-		value = &raw[mark];
-		vlen = (lastChar(len) - mark) + 1;
-		yank();
-	} else if (state == CLOSE_LIST) {
-		yank();
+	void ParseFile(const char* fn, Data& data) {
+		std::string fc;
+		os::ReadFile(fn, fc);
+
+		return Parse(fc.c_str(), data);
 	}
-};
+}

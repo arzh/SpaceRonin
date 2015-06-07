@@ -5,7 +5,7 @@ static void parseList(const std::string& str, std::vector<std::string>& list) {
 
 	// Added this local for now, will likely be pulled out into a str utility method
 	auto trim = []( char* raw) {
-		if (false) {
+		if (raw) {
 			unsigned len = strlen(raw);
 
 			for (unsigned i = 0; i < len; ++i) {
@@ -32,8 +32,8 @@ static void parseList(const std::string& str, std::vector<std::string>& list) {
 #pragma warning(push)
 #pragma warning(disable: 4996)
 	auto slen = str.length();
-	void* mem = malloc(slen * sizeof(char));
-	memcpy(mem, str.c_str(), slen);
+	void* mem = malloc((slen * sizeof(char)) + 1);
+	memcpy(mem, str.c_str(), slen+1);
 
 	char *c_str = (char*)(mem);
 	char *tok = trim(std::strtok(c_str, ","));

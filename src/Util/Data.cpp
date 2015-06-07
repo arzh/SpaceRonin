@@ -4,48 +4,46 @@
 static void parseList(const std::string& str, std::vector<std::string>& list) {
 
 	// Added this local for now, will likely be pulled out into a str utility method
-	auto trim = [](const char* raw) {
-		unsigned begin = 0, end = 0;
-		unsigned len = strlen(raw);
+	auto trim = []( char* raw) {
+		if (raw) {
+			unsigned len = strlen(raw);
 
-		for (unsigned i = 0; i < len; ++i) {
-			char c = raw[i];
-			if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
-				begin = i;
-				break;
+			for (unsigned i = 0; i < len; ++i) {
+				char c = raw[i];
+				if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
+					raw = &raw[i];
+					len -= i;
+					break;
+				}
+			}
+
+			for (unsigned j = len - 1; j > 0; --j) {
+				char c = raw[j];
+				if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
+					raw[j + 1] = '\0';
+					break;
+				}
 			}
 		}
 
-		for (unsigned j = len - 1; j > 0; --j) {
-			char c = raw[j];
-			if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
-				end = j;
-				break;
-			}
-		}
-
-		len = (end - begin) + 1;
-		char* trimmed = new char[len + 1]();
-		memcpy(trimmed, &raw[begin], len);
-		return trimmed;
+		return raw;
 	};
 
 #pragma warning(push)
 #pragma warning(disable: 4996)
-	std::string s = str;
-	char *c_str = const_cast<char*>(s.c_str());
-	char *tok = std::strtok(c_str, ",");
-	char *trimmed = trim(tok);
-	while (trimmed != 0) {
-		list.push_back(trimmed);
-		delete[] trimmed; trimmed = 0;
-		tok = std::strtok(NULL, ",");
-		if (tok == 0) break;
-		trimmed = trim(tok);
+	auto slen = str.length();
+	void* mem = malloc(slen * sizeof(char));
+	memcpy(mem, str.c_str(), slen);
+
+	char *c_str = (char*)(mem);
+	char *tok = trim(std::strtok(c_str, ","));
+
+	while (tok != 0) {
+		list.push_back(tok);
+		tok = trim(std::strtok(NULL, ","));
 	}
 
-	if (trimmed)
-		delete[] trimmed;
+	free(mem);
 #pragma warning(pop)
 }
 
@@ -121,7 +119,7 @@ bool Data::IntList(const std::string& key, std::vector<int>& list) {
 		return false;
 
 	std::vector<std::string> strlist;
-	parseList(t->second, strlist);
+	parseList2(t->second, strlist);
 
 	try {
 		for (auto&& s : strlist) {

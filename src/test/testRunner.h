@@ -11,9 +11,9 @@ void RunUnitTests(std::ostream& out) {
 	TestDataClass(out);
 	out << "Finished Util\\Data class\n";
 
-	out << "Testing SDFLexer\n";
+	out << "Testing SDF parsing\n";
 	TestSDFParser(out);
-	out << "Finished SDFLexer\n";
+	out << "Finished SDF parsing\n";
 }
 
 #endif

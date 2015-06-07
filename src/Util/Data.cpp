@@ -36,7 +36,7 @@ static void parseList(const std::string& str, std::vector<std::string>& list) {
 	char *tok = std::strtok(c_str, ",");
 	char *trimmed = trim(tok);
 	while (trimmed != 0) {
-		list.push_back(trimmed); 
+		list.push_back(trimmed);
 		delete[] trimmed;
 		tok = std::strtok(NULL, ",");
 		trimmed = trim(tok);
@@ -72,7 +72,7 @@ Data::~Data() {
 
 bool Data::Int(const std::string& key, int& value) {
 	auto& t = _map.find(key);
-	
+
 	if (t == _map.end())
 		return false;
 
@@ -169,12 +169,10 @@ bool Data::Insert(const std::string& key, const std::string& value, bool dontOve
 	if (t != _map.end()) {
 		if (dontOverwrite)
 			return false;
-		
 		t->second = value;
 	} else {
 		_map.insert({ key, value });
 	}
-
 
 	return true;
 }

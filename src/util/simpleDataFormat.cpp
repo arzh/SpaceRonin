@@ -22,7 +22,7 @@ namespace sdf {
 		substr _value;
 
 		unsigned mark = 0, loc = 0;
-		unsigned len = strlen(content);
+		auto len = strlen(content);
 
 		STATE state = MARK;
 		STATE nextState = KEY;
